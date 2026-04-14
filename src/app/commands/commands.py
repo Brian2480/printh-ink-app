@@ -27,6 +27,7 @@ def create_admin(username, password):
         # Nota: Asegúrate de que tu modelo User tenga el método set_password
         new_admin = User(
             username=username,
+            password_hash=password,
             is_admin=True
         )
         new_admin.set_password(password)

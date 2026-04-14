@@ -72,14 +72,17 @@
             <div class="collapse navbar-collapse text-white" id="navbarNav">
                 <ul class="navbar-nav nav-underline d-flex justify-content-center">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{url_for('admin.view_orders')}}">Ordenes</a>
+                        <a class="nav-link {{ 'active' if request.path == url_for('admin.view_orders') }}" aria-current="page"
+                        href="{{url_for('admin.view_orders')}}">Ordenes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{url_for('admin.clients')}}">Clientes</a>
+                        <a class="nav-link {{ 'active' if request.path == url_for('admin.clients') }}" aria-current="page"
+                        href="{{url_for('admin.clients')}}">Clientes</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{url_for('auth.logout')}}">Logout</a>
+                        <a class="nav-link {{ 'active' if request.path == url_for('auth.logout') }}" aria-current="page"
+                        href="{{url_for('auth.logout')}}">Logout</a>
                     </li>
                 </ul>
             </div>
