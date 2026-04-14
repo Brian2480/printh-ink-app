@@ -1,0 +1,92 @@
+.mi-nav {
+    background: #fc4b08;
+}
+
+.fondo-orange {
+    background: #fc4b08;
+
+}
+
+
+/* Color para el botón que está activo (seleccionado) */
+.pagination .page-item.active .page-link {
+    background-color: #fc4b08 !important;
+    border-color: #fc4b08 !important;
+    color: white !important;
+}
+
+/* Color cuando pasas el mouse (Hover) - Opcional pero recomendado */
+.pagination .page-link:hover {
+    background-color: #ff6a33;
+    color: white;
+    border-color: #fc4b08;
+}
+
+/* Color de los números que NO están seleccionados */
+.pagination .page-link {
+    color: #fc4b08;
+    /* Texto naranja, fondo blanco por defecto */
+}
+
+.fondo-white {
+    background-color: #ffff;
+}
+
+
+.svg-overlay {
+    width: 40%;
+    height: auto;
+}
+
+.object-fit-cover {
+    object-fit: cover;
+}
+
+
+
+html,
+body {
+    height: 100%;
+}
+
+.body-fondo {
+    background-image: url("../img/Espacio.webp");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    /* opcional */
+}
+
+.footer-fondo {
+    background-color: black;
+}
+
+
+
+.transition-all {
+    transition: all 0.3s ease-in-out;
+}
+
+#file-label {
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    /* Un borde sutil para que parezca zona de carga */
+}
+
+#file-label:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+
+.transition-all {
+    transition: all 0.3s ease;
+}
+
+
+.htmx-request {
+    opacity: 0.5;
+    transition: opacity 200ms linear;
+}
+
+.start-25 { left: 3%; }

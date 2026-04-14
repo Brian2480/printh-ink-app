@@ -1,0 +1,251 @@
+{% extends 'admin/base.html' %}
+{% block title %} Ordenes-DTF {% endblock %}
+{% from 'macros/fields.html' import render_link, render_monto, render_select, render_submit_custom %}
+
+{% block content %}
+<div class="container min-vh-100">
+    <div class="row mt-5">
+        <div class="col mt-5 text-center">
+
+        </div>
+    </div>
+
+    <!-- Dias de la semana -->
+    <nav aria-label="Navegación de días">
+        <ul class="pagination justify-content-center">
+            {% for i in range(7) %}
+            <li class="page-item {{ 'active' if day_id == i|string else '' }}">
+                <a class="page-link" href="{{url_for('admin.view_orders', day=i)}}">
+                    {{ ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'][i] }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </nav>
+
+    <!-- Button Excel -->
+    <div class="row mt-4 ">
+        <div class="col text-center">
+            <form action="{{ url_for('admin.download_excel') }}" method="get">
+                <input type="hidden" name="day" value="{{ day_id }}">
+                <button class="btn btn-success" type="submit">
+                    <i class="bi bi-file-earmark-spreadsheet"></i> Excel
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="contenedor-ordenes" hx-get="{{ url_for('admin.view_orders', day=day_id) }}" hx-trigger="every 60s"
+        hx-select="#list-cards" hx-swap="innerHTML">
+
+        <div id="list-cards">
+            {% for order in todo %}
+            <div class="row mt-4">
+                <div class="col-12">
+                    <!-- Card -->
+                    <div class="card bg-dark text-white p-2 position-relative">
+                        <span class="position-absolute top-0 start-25 translate-middle badge bg-dark">
+                            Orden {{ loop.index }}
+                            <span class="visually-hidden">notificación</span>
+                        </span>
+                        <div class="row">
+                            <!-- Cliente -->
+                            <div class="col-2 d-flex justify-content-center align-items-center">
+                                <div class="d-flex flex-column text-center">
+                                    <strong>Cliente</strong>
+                                    {% if order.uploads and order.uploads.pdf_url %}
+                                    {% set download_pdf = order.uploads.pdf_url.replace('/upload/',
+                                    '/upload/fl_attachment/') %}
+                                    <a href="{{ download_pdf }}">
+                                        {{ order.user.username }}
+                                    </a>
+                                    {% else %}
+                                    {{ order.user.username }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <!-- Precio -->
+                            <div class="col-1 d-flex justify-content-center align-items-center">
+                                <div class="d-flex flex-column text-center ">
+                                    <strong>Price</strong>
+                                    ${{ order.price }}
+                                </div>
+                            </div>
+                            <!-- Metros -->
+                            <div class="col-1 d-flex justify-content-center align-items-center">
+                                <div class="d-flex flex-column text-center">
+                                    <strong>Cantidad</strong>
+                                    {{ order.meters }}
+                                </div>
+                            </div>
+                            <!-- Costo Total -->
+                            <div class="col-1 d-flex justify-content-center align-items-center">
+                                <div class="d-flex flex-column text-center">
+                                    <strong>Total</strong>
+                                    ${{ order.cost }}
+                                </div>
+                            </div>
+                            <!-- Captura Adelanto -->
+                            <div class="col-1 d-flex justify-content-center align-items-center">
+                                <div class="d-flex flex-column text-center">
+                                    <strong>Captura</strong>
+                                    {% if order.uploads and order.uploads.jpg_advance_url %}
+                                    <a href="{{ order.uploads.jpg_advance_url }}" target="_blank"
+                                        class="btn btn-success btn-sm">
+                                        <i class="bi bi-eye-fill"></i>
+                                    </a>
+                                    {% else %}
+                                    <span class="btn btn-outline-danger btn-sm disabled">
+                                        <i class="bi bi-eye-slash-fill"></i>
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <!-- Monto Adelanto -->
+                            <div class="col-1 d-flex justify-content-center align-items-center">
+                                <div class="d-flex flex-column text-center">
+                                    <strong>Adelanto</strong>
+                                    <button type="button" class="btn btn-dark" data-bs-toggle="modal"
+                                        data-bs-target="#editAdvance-{{ order.id }}">
+                                        ${{ order.advance }}
+                                    </button>
+                                    <div class="modal fade" id="editAdvance-{{ order.id }}" tabindex="-1"
+                                        aria-labelledby="editAdvanceLabel-{{ order.id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content bg-dark text-white">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="editAdvanceLabel-{{ order.id }}">
+                                                        Editar Adelanto (Orden #{{ order.id }})
+                                                    </h1>
+                                                    <button type="button" class="btn-close btn-close-white"
+                                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form
+                                                    action="{{ url_for('admin.edit_amount', id_order=order.id, belong_at='advance', day=day_id ) }}"
+                                                    method="post">
+                                                    {{ form.hidden_tag() }}
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                {% set _ = form.advance.process_data(order.advance)
+                                                                %}
+                                                                {{ render_monto(form.advance) }}
+                                                            </div>
+                                                            <div class="col-6">
+                                                                {% set _ =
+                                                                form.a_belong.process_data(order.a_belong) %}
+                                                                {{ render_select(form.a_belong) }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Cerrar</button>
+                                                        <button type="submit" class="btn btn-primary">Guardar</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- F.P Adelanto -->
+                            <div class="col-1 d-flex justify-content-center align-items-center">
+                                <div class="d-flex flex-column text-center">
+                                    <strong>F.P</strong>
+                                    {{ order.a_belong }}
+                                </div>
+                            </div>
+                            <!--  Captura Liquidacion -->
+                            <div class="col-1 d-flex justify-content-center align-items-center">
+                                <div class="d-flex flex-column text-center">
+                                    <strong>Captura</strong>
+                                    {% if order.uploads and order.uploads.jpg_pay_url %}
+                                    <a href="{{ order.uploads.jpg_pay_url }}" target="_blank"
+                                        class="btn btn-success btn-sm">
+                                        <i class="bi bi-eye-fill"></i>
+                                    </a>
+                                    {% else %}
+                                    <span class="btn btn-outline-danger btn-sm disabled">
+                                        <i class="bi bi-eye-slash-fill"></i>
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <!-- Monto Liquidacion -->
+                            <div class="col-1 d-flex justify-content-center align-items-center">
+                                <div class="d-flex flex-column text-center">
+                                    <strong>Liquidacion</strong>
+                                    ${{ order.total }}
+                                </div>
+                            </div>
+                            <!-- F.P Liquidacion -->
+                            <div class="col-1 d-flex justify-content-center align-items-center">
+                                <div class="d-flex flex-column text-center">
+                                    <strong>F.P</strong>
+                                    <button type="button" class="btn btn-dark" data-bs-toggle="modal"
+                                        data-bs-target="#editPay-{{ order.id }}">
+                                        {{ order.t_belong }}
+                                    </button>
+                                    <div class="modal fade" id="editPay-{{ order.id }}" tabindex="-1"
+                                        aria-labelledby="editPayLabel-{{ order.id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content bg-dark text-white">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="editPayLabel-{{ order.id }}">
+                                                        Forma de Pago (Orden #{{ order.id }})
+                                                    </h1>
+                                                    <button type="button" class="btn-close btn-close-white"
+                                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form
+                                                    action="{{ url_for('admin.edit_amount', id_order=order.id, belong_at='pay', day=day_id) }}"
+                                                    method="post">
+                                                    {{ form.hidden_tag() }}
+                                                    <div class="modal-body">
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-6">
+                                                                {% set _ =
+                                                                form.t_belong.process_data(order.t_belong) %}
+                                                                {{ render_select(form.t_belong) }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Cerrar</button>
+                                                        <button type="submit" class="btn btn-primary">Guardar</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Status -->
+                            <div class="col-1 d-flex justify-content-center align-items-center">
+                                <div class="d-flex flex-column text-center">
+                                    <strong>Status</strong>
+                                    {% if order.uploads.jpg_pay_url or order.t_belong != 'S/A' %}
+                                    {% set new_payment_status = 0 if order.paid == 1 else 1 %}
+                                    {% set status = 'Pagado' if order.paid == 1 else 'Liquidar' %}
+                                    {% set btn_class = 'btn-success' if order.paid == 1 else 'btn-secondary' %}
+                                    <form
+                                        action="{{url_for('admin.payment_status', id_order=order.id ,payment=new_payment_status, day=day_id )}}"
+                                        method="post">
+                                        <button type="submit" class="btn {{ btn_class }} btn-sm">
+                                            {{ status }}
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

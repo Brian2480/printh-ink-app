@@ -1,0 +1,176 @@
+{% extends 'user/base.html' %}
+{% from 'macros/fields.html' import render_upload_custom, render_submit_custom, render_link %}
+{% block title %} Mis Ordenes {% endblock %}
+{% block fondo %}body-fondo{% endblock %}
+
+{% block content %}
+<div class="container min-vh-100">
+    <div class="row justify-content-center mt-5">
+        <div class="col-12 text-center text-white mt-4">
+            <h1>TUS PEDIDOS</h1>
+            <h2> {{ current_user.username }} </h2>
+        </div>
+    </div>
+
+
+    <div id="contenedor-ordenes" hx-get="{{ url_for('user.orders') }}" hx-trigger="every 20s" hx-select="#list-cards"
+        hx-swap="innerHTML">
+
+        <div id="list-cards">
+            {% if user_orders %}
+            {% for order in user_orders %}
+            <div class="row justify-content-center my-3">
+                <div class="col-11 col-md-9">
+                    <div class="card  bg-dark shadow">
+                        {% set bg = 'bg-success' if order.paid == 1 else 'bg-light' %}
+                        {% set tx = 'text-white' if order.paid == 1 else '' %}
+                        {% set ds = 'disabled' if order.paid == 1 else '' %}
+                        {% set status = 'Pagado' if order.paid == 1 else 'Por Pagar' %}
+                        <!-- Card Header -->
+                        <div class="card-header {{ bg }} {{ tx }} }">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong>PEDIDO #{{ loop.index }}: {{ status }} </strong>
+                                <form action="{{url_for('user.delete_order', 
+                                order_id=order.id, pdf_id=order.uploads.pdf_public_id, advance_id=order.uploads.jpg_advance_public_id, pay_id=order.uploads.jpg_pay_public_id )}}", 
+                                method="post">
+                                    <button class="btn btn-sm btn-danger {{ ds }}" type="submit" >
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- Card Boody -->
+                        <div class="card-body text-white">
+                            <div class="row">
+                                <!-- Precio -->
+                                <div class="col-4">
+                                    <div class="d-flex flex-column text-center">
+                                        <strong>Precio</strong>
+                                        ${{ order.price }}
+                                    </div>
+                                </div>
+                                <!-- Metros -->
+                                <div class="col-4">
+                                    <div class="d-flex flex-column text-center">
+                                        <strong>Metros</strong>
+                                        {{ order.meters }}
+                                    </div>
+                                </div>
+                                <!-- Costo -->
+                                <div class="col-4">
+                                    <div class="d-flex flex-column text-center">
+                                        <strong>Costo</strong>
+                                        ${{ order.cost }}
+                                    </div>
+                                </div>
+                                <hr class="border-secondary my-3">
+                                <!-- Adelanto -->
+                                <div class="col-12 col-md-6 p-3">
+                                    <div class="d-flex text-center flex-column">
+                                        <strong class="mb-2">Captura Adelanto</strong>
+                                        {% if order.uploads and order.uploads.jpg_advance_url %}
+                                        <div class="d-flex gap-2">
+                                            <a href="{{ order.uploads.jpg_advance_url }}" target="_blank"
+                                                class="btn btn-success w-100">
+                                                <i class="bi bi-eye-fill"></i> Ver Adelanto
+                                            </a>
+                                            <form
+                                                action="{{url_for('user.delete_upload', document_id=order.uploads.id, type_document='advance')}}"
+                                                method="post">
+                                                {% set dis = 'disabled' if order.paid == 1 %}
+                                                {% set btn_style = 'btn-outline-secondary' if order.paid == 1 else
+                                                'btn-danger' %}
+                                                <button class="btn {{ btn_style }}" {{ dis }}
+                                                    onclick="return confirm('¿Eliminar adelanto?')">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                        {% else %}
+                                        <form action="{{url_for('user.upload_advance', order_id = order.id)}}"
+                                            method="post" enctype="multipart/form-data">
+                                            {{ form_adv.hidden_tag() }}
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <div>
+                                                    {{ render_upload_custom(form_adv.document_advance, order.id,
+                                                    'adv')}}
+                                                </div>
+                                                {{ render_submit_custom(icon="bi-upload", tooltip="Subir") }}
+                                            </div>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <hr class="d-md-none border-secondary my-3">
+                                <!-- Liquidacion -->
+                                <div class="col-12 col-md-6 p-3">
+                                    <div class="d-flex text-center flex-column">
+                                        <strong class="mb-2">Captura Liquidacion</strong>
+                                        {% if order.uploads and order.uploads.jpg_pay_url %}
+                                        <div class="d-flex gap-2">
+                                            <a href="{{ order.uploads.jpg_pay_url }}" target="_blank"
+                                                class="btn btn-success w-100">
+                                                <i class="bi bi-eye-fill"></i> Ver Adelanto
+                                            </a>
+                                            <form
+                                                action="{{url_for('user.delete_upload', document_id=order.uploads.id, type_document='pay')}}"
+                                                method="post">
+                                                {% set dis = 'disabled' if order.paid == 1 %}
+                                                {% set btn_style = 'btn-outline-secondary' if order.paid == 1 else
+                                                'btn-danger' %}
+                                                <button class="btn {{ btn_style }}" {{ dis }}
+                                                    onclick="return confirm('¿Eliminar adelanto?')">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                        {% else %}
+                                        <form action="{{url_for('user.upload_pay', order_id = order.id)}}" method="post"
+                                            enctype="multipart/form-data">
+                                            {{ form_pay.hidden_tag() }}
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <div>
+                                                    {{ render_upload_custom(form_pay.document_pay, order.id, 'pay')}}
+                                                </div>
+                                                {{ render_submit_custom(icon="bi-upload", tooltip="Subir") }}
+                                            </div>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function updateFileStatus(input, identifier) {
+        // Buscamos los elementos exactos usando el identificador único
+        const label = document.getElementById('label-' + identifier);
+        const icon = document.getElementById('icon-' + identifier);
+        const text = document.getElementById('text-' + identifier);
+
+        if (input.files && input.files.length > 0) {
+            // Estilo cuando ya seleccionó archivo
+            label.classList.replace('btn-secondary', 'btn-success');
+            icon.classList.replace('bi-file-earmark-arrow-up', 'bi-check-lg');
+            if (text) text.innerText = "LISTO";
+        } else {
+            // Revertir si borra la selección
+            label.classList.replace('btn-success', 'btn-secondary');
+            icon.classList.replace('bi-check-lg', 'bi-file-earmark-arrow-up');
+            // Aquí podrías poner el texto original si lo deseas
+        }
+    }
+</script>
+{% endblock %}

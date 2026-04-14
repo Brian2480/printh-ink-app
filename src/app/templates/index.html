@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block fondo %}body-fondo{% endblock %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row mi-nav mt-5 shadow">
+        <div class="col-12">
+            <div class="carousel slide mt-3 mb-3" id="mi-carousel" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active" data-bs-interval="3000">
+                        <!-- Imagen Desktop -->
+                        <img src="{{ url_for('static' , filename='img/carousel-desk-1.svg')}}" alt=""
+                            class="card-img-top img-fluid d-none d-md-block">
+
+                        <!-- Imagen Movil -->
+                        <img src="{{ url_for('static' , filename='img/carousel-mov-1.svg')}}" alt=""
+                            class="card-img-top img-fluid d-block d-md-none ">
+                    </div>
+
+                    <!-- <button class="carousel-control-prev" data-bs-target="#mi-carousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Anterior</span>
+                    </button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Que es e imagen -->
+    <div class="row bg-dark p-3 justify-content-center">
+        <div class="col-12 col-lg-8 order-2 order-lg-1 mt-3 mt-lg-0">
+            <div class="card bg-dark h-100 border-0">
+                <div
+                    class="card-body bg-dark rounded d-flex flex-column align-items-center justify-content-center text-white shadow">
+                    <div class="text-center px-3 px-lg-5">
+                        <h1 class="display-3"><strong>¿QUÉ ES DTF?</strong></h1>
+                        <p class="lead fs-5 fs-lg-3">
+                            El DTF (Direct to Film) es una técnica de impresión textil que permite transferir diseños a
+                            todo
+                            tipo de
+                            telas, logrando alta definición, colores vivos y gran resistencia al lavado.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-10 col-lg-4 order-1 order-lg-2">
+            <img src="{{url_for('static' , filename = 'img/predeterminado-bg.svg')}}" alt=""
+                class="img-fluid shadow rounded">
+        </div>
+    </div>
+
+    <!-- ¿Por qué elegirnos? -->
+    <div class="row mt-4 justify-content-center align-items-center">
+        <div class="col-12 col-lg-4 order-1 order-1">
+            <img src="{{url_for('static' , filename = 'img/Astronauta.svg')}}" alt="" class="img-fluid w-100">
+        </div>
+
+        <div class="col-12 col-lg-6 order-2 order-2 text-white text-center text-lg-start">
+            <h1 class="display-1"><strong>¿POR QUÉ ELEGIRNOS?</strong></h1>
+            <p class="lead fs-5">
+                Trabajamos con equipos de impresión de alta precisión y materiales de calidad profesional para
+                garantizar resultados consistentes en cada pedido.
+            </p>
+        </div>
+    </div>
+
+    <!-- Beneficios -->
+    <div class="row bg-dark  justify-content-center align-items-center text-white mt-4 p-3">
+        <div class="col-12 col-lg-6 order-1 order-lg-1">
+            <img src="{{url_for('static',filename ='img/predeterminado-bg.svg')}}" alt=""
+                class="img-fluid shadow rounded">
+        </div>
+
+        <div class="col-12 col-lg-6 order-2 order-lg-2">
+            <div class="row p-3">
+                <div class="card card-body bg-dark shadow col-12">
+                    <h1 class="display-3"><strong>BENEFICIOS</strong></h1>
+                    <ul class="list-unstyled">
+                        <li class="lead fs-5">✔ Colores intensos y bien definidos</li>
+                        <li class="lead fs-5">✔ Excelente adherencia y durabilidad</li>
+                        <li class="lead fs-5">✔ No se cuartea ni se despinta</li>
+                        <li class="lead fs-5">✔ Compatible con algodón, poliéster y mezclas</li>
+                        <li class="lead fs-5">✔ Ideal para pedidos pequeños y grandes</li>
+                    </ul>
+                </div>
+
+                <div class="card card-body bg-dark shadow mt-3 col-12">
+                    <h1 class="display-3"><strong>APLICACIONES</strong></h1>
+                    <ul>
+                        <li class="lead fs-5">Playeras</li>
+                        <li class="lead fs-5">Sudaderas</li>
+                        <li class="lead fs-5">Gorras</li>
+                        <li class="lead fs-5">Uniformes</li>
+                        <li class="lead fs-5">Merchandising</li>
+                        <li class="lead fs-5">Personalizados</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}

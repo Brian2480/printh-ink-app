@@ -1,0 +1,71 @@
+{% macro render_string( field , placeholder = "" ) %}
+<div class="form-floating mt-3">
+    {{ field( class='form-control', placeholder = placeholder ) }}
+    {{ field.label(class='form-label') }}
+</div>
+{% endmacro %}
+
+
+{% macro render_select( field , placeholder = "" ) %}
+<div class="form-floating my-2">
+    {{ field( class='form-control', placeholder = placeholder ) }}
+    {{ field.label(class='form-label') }}
+</div>
+{% endmacro %}
+
+
+{% macro render_submit(field) %}
+<div class="text-center mt-3">
+    {{ field( class='btn btn-primary' )}}
+</div>
+{% endmacro %}
+
+
+{% macro render_submit_custom(btn_class='btn btn-dark', icon='bi-upload', tooltip='Guardar') %}
+<button type="submit" class="{{ btn_class }}" title="{{ tooltip }} ">
+    <i class="bi {{ icon }}"></i>
+</button>
+{% endmacro %}
+
+
+{% macro render_monto( field , placeholder = "" ) %}
+<div class="form-floating my-2">
+    {{ field( class='form-control w-100', placeholder = placeholder ) }}
+    {{ field.label(class='form-label') }}
+</div>
+{% endmacro %}
+
+{% macro render_edit_price( field , placeholder = "" ) %}
+<div class="form-floating my-2">
+    {{ field( class='form-control', placeholder = placeholder ) }}
+    {{ field.label(class='form-label') }}
+</div>
+{% endmacro %}
+
+
+{% macro render_link(url='#', btn_class='btn btn-success', icon='bi-floppy2-fill', tooltip='Editar') %}
+<a href="{{ url }}" class="{{ btn_class }}" title="{{ tooltip }}">
+    <i class="bi {{ icon }}"></i>
+</a>
+{% endmacro %}
+
+
+{% macro render_upload_custom(field, idx, prefix, label_text) %}
+{# Creamos un ID único usando el prefijo (adv o pay) y el ID de la orden #}
+{% set unique_id = "file-" ~ prefix ~ "-" ~ idx %}
+
+<div class="d-flex flex-column align-items-center" style="width: 110px;">
+    {# Input oculto con onchange dinámico #}
+    {{ field(class="d-none", id=unique_id,
+    onchange="updateFileStatus(this, '" ~ prefix ~ "-" ~ idx ~ "')") }}
+
+    {# Label/Botón #}
+    <label for="{{ unique_id }}" id="label-{{ prefix }}-{{ idx }}"
+        class="btn btn-secondary btn-sm w-100 d-flex align-items-center justify-content-center py-2"
+        style="cursor: pointer; transition: all 0.3s;">
+
+        <i id="icon-{{ prefix }}-{{ idx }}" class="bi bi-file-earmark"></i>
+        <span id="text-{{ prefix }}-{{ idx }}" style="font-size: 0.7rem;"> {{ label_text }}</span>
+    </label>
+</div>
+{% endmacro %}

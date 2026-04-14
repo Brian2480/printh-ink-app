@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title%}Contacto{% endblock %}
+{% block fondo %}body-fondo{% endblock %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row mt-5">
+
+    </div>
+    <div class="row mt-5 align-items-center justify-content-center">
+        <div class="col-12 col-lg-5">
+            <img src="{{ url_for('static', filename='img/Astronauta_C.svg') }}" alt="SVG" class="img-fluid w-100">
+        </div>
+
+        <div class="col-12 col-lg-5 p-3">
+            <div class="text-white rounded">
+                <div class="d-flex flex-column justify-content-center align-items-center">
+                    <div class="display-5">“Chatea con nosotros”</div>
+                    <div class="display-5">“WhatsApp”</div>
+                    <a href="https://wa.me/5215541845112" class="d-flex align-items-center gap-3 text-decoration-none text-success">
+                        <i class="bi bi-whatsapp fs-3"></i>
+                        <span class="fs-3 fw-bold">55 41 84 51 12</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center my-5">
+        <div class="card card-body mx-3 mx-lg-5 col-10">
+            <div class="ratio ratio-16x9">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3763.1146751914484!2d-99.1370715!3d19.407450600000008!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff40f92098d9%3A0x407c088d023c43f2!2sPRINTH%20INK%20PUBLICIDAD%20(PLASMANDO%20IDEAS)!5e0!3m2!1ses!2smx!4v1768100250612!5m2!1ses!2smx"
+                    style="border:0;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

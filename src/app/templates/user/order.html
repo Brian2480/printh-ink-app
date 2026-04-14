@@ -1,0 +1,15 @@
+{% extends 'user/base.html' %}
+{% block title %} Mis Ordenes {% endblock %}
+
+<!-- {% block fondo %}body-fondo{% endblock %} -->
+{% block content %}
+<div class="container-fluid min-vh-100 d-flex justify-content-center align-items-center">
+    <div class="row w-100 text-center text-white">
+        <div class="col">
+            <h1>BIENVENIDO/A</h1>
+            <h2> {{ current_user.username }} </h2>
+            <a href="{{url_for('user.upload_pdf')}}" class="btn btn-primary" >+ Nuevo Pedido</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
